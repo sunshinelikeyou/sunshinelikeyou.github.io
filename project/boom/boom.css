@@ -1,0 +1,113 @@
+*{
+    margin:0;
+    padding:0;
+}
+#wrap{
+    width:1920px;
+    height:1080px;
+    background: url("boom/bgm.jpg");
+    position:absolute;
+}
+#start{
+    width:500px;
+    height:143px;
+    background: url("boom/start.png");
+    box-shadow: 3px 3px 3px #0040D0;
+}
+#alert{
+    width: 530px;
+    height:170px;
+    position:absolute;
+    left:695px;
+    top:455px;
+    border-radius: 10px;
+    display: none;
+}
+#delete{
+    width:44px;
+    height:42px;
+    background: url("boom/delete.png");
+    position:absolute;
+    top:0;
+    right:0;
+    cursor: pointer;
+    border-radius: 10px;
+}
+#box{
+    width:500px;
+    height:500px;
+    border-top:1px solid #b25f27;
+    border-left:1px solid #b25f27;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.3);
+    /*transform: perspective(800px) rotateX(45deg);*/
+    position: absolute;
+    left:0;
+    top:0;
+    right: 0;
+    bottom: 0;
+    margin: 50px auto;
+    display: none;
+
+}
+p{
+    position:absolute;
+    top:0px;
+    left:880px;
+    text-align: center;
+    width:500px;
+    height:30px;
+    line-height: 30px;
+    color:red;
+    font-weight: bold;
+    display: none;
+}
+.block{
+    width: 49px;
+    height:49px;
+    float:left;
+    border-right:1px solid #b25f27;
+    border-bottom:1px solid #b25f27;
+    box-shadow: 0 0 4px #333 inset;
+    background: url("boom/grass.jpg");
+}
+.show{
+    background:url("boom/boom.png");
+}
+.num{
+    background: #ecd0a1;
+    font-weight: bold;
+    text-align: center;
+    line-height: 49px;
+}
+.flag{
+    background: url("boom/flag.png");
+}
+#suggestion{
+    position: absolute;
+    top:0;
+    left: 1020px;
+}
+#primary{
+      display:block;
+      width: 100px;
+      height:50px;
+      margin-left:200px;
+  }
+#hight{
+    display:block;
+    width: 100px;
+    height:50px;
+    margin-left:200px;
+}
+.look{
+    display: block;
+}
+#time{
+    font-size: 30px;
+    line-height: 100px;
+    text-align: center;
+    color: yellow;
+    display:block;
+    width: 450px;
+    height:100px;
+}
