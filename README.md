@@ -3,3 +3,5 @@ Some small  cases or some of learning notes
 - fullpage + animate.css  做的一个小案例
 - jquery 做的轮播图
 - vue + bootstrap  做的简单的ToDoList 用了localStorage 存储  
+- 原生js写的扫雷  仿照别人的写的
+- 扇形导航 
