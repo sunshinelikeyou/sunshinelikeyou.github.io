@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>todoList</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <script src=" https://cdn.jsdelivr.net/npm/vue "></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .marginTop20 {
+            margin-top: 13px;
+        }
+        
+        .noBorder {
+            border: none;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-info">
+    <div id="todo-box">
+        <div>
+            <div class="container bg-warning">
+                <h1 class="col-lg-6 text-center" v-rainbow>{{title}}</h1>
+                <div class="col-lg-6 marginTop20">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" v-model="todoName" placeholder="input you todo" @keyup.enter="post()">
+                        <span class="input-group-addon" id="sizing-addon1" @click="post()">submit</span>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-success">
+                        <span class="badge">{{doNum}}</span> 进行中
+                    </li>
+                    <li class="list-group-item clearfix text-center" v-for="(todo ,index) in todoList" v-show="!todo.isCompleted">
+                        <input type="checkbox" class="col-lg-2" :checked="todo.isCompleted" @click="todo.isCompleted = !todo.isCompleted;completeNum ++;doNum --;unpdateChecked(todo ,index)">
+                        <input type="text" class="col-lg-4 noBorder" v-model="todo.name" @blur="unpdateName(todo ,index)">
+                        <input class="col-lg-3 noBorder" v-model="todo.expectTime" @blur="unpdateTime(todo ,index)" placeholder=" input you expect time">
+                        <span class="col-lg-2">{{todo.startTime}}</span>
+                        <span class="close" @click="del(index,todo)">&times;</span>
+                    </li>
+                </ul>
+                <ul class="list-group  ">
+                    <li class="list-group-item list-group-item-warning">
+                        <span class="badge">{{completeNum}}</span> 已完成
+                    </li>
+                    <li class="list-group-item clearfix  text-center " v-for="(todo ,index) in todoList" v-show="todo.isCompleted">
+                        <input type="checkbox" class="col-lg-2" :checked="todo.isCompleted" @click="todo.isCompleted = !todo.isCompleted;completeNum --;doNum ++;unpdateChecked(todo ,index)">
+                        <input type="text" class="col-lg-4 noBorder" v-model="todo.name" @blur="unpdateName(todo ,index)">
+                        <input class="col-lg-3 noBorder" v-model="todo.expectTime" @blur="unpdateTime(todo ,index)" placeholder=" input you expect time">
+                        <span class="col-lg-2">{{todo.startTime}}</span>
+                        <span class="close" @click="del(index,todo)">&times;</span>
+                    </li>
+                </ul>
+                <button type="button" class="btn btn-success pull-right" @click="clear()">清空TODO列表</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // TODO:谷歌浏览器中的本地cookie不能使用，localStorage要手动设置 阻止第三方cookie的开关关了才可以使用
+        let data = [];
+        var vm = new Vue({
+            el: '#todo-box',
+            data: {
+                // 标题
+                title: 'ToDoList',
+                // 正在进行的todo数量
+                doNum: 0,
+                // 已经完成的todo数量
+                completeNum: 0,
+                // 新建的todo名字
+                todoName: '',
+                expTime: '',
+                // todo的数组 模拟数据
+                todoList: JSON.parse(localStorage.getItem('todoArr')),
+            },
+            methods: {
+                // 删除当前todo
+                del: function(index, todo) {
+                    data.splice(index, 1);
+                    this.unpdateData();
+                    // this.countNum();
+                    // this.todoList.splice(this.todoList.length - 1);
+                    if (todo.isCompleted) {
+                        this.completeNum--;
+                    } else {
+                        this.doNum--;
+                    }
+                },
+                // 创建todo
+                post: function() {
+                    // 输入框有内容才能添加todo
+                    console.log(data);
+                    if (this.todoName) {
+                        data.push({
+                            name: this.todoName,
+                            startTime: new Date().toLocaleString(),
+                            expectTime: this.expTime,
+                            isCompleted: false
+                        });
+
+                        this.unpdateData();
+                        this.doNum++;
+                        this.completeNum = this.todoList.length - this.doNum;
+                    }
+                    // todo添加完后将输入框内容置空
+                    this.todoName = '';
+                    // this.countNum();
+                },
+                unpdateData: function() {
+                    localStorage.setItem('todoArr', JSON.stringify(data));
+                    this.todoList = JSON.parse(localStorage.getItem('todoArr'));
+                },
+                unpdateName: function(todo, index) {
+                    data[index].name = todo.name;
+                    this.unpdateData();
+                },
+                unpdateTime: function(todo, index) {
+                    data[index].expectTime = todo.expectTime;
+                    this.unpdateData();
+                },
+                unpdateChecked: function(todo, index) {
+                    data[index].isCompleted = todo.isCompleted;
+                    this.unpdateData();
+                },
+                clear: function() {
+                    var msg = confirm('清空列表后将无法恢复，确定清空列表吗？');
+                    if (msg) {
+                        data = [];
+                        this.doNum = 0;
+                        this.completeNum = 0;
+                        this.unpdateData();
+                    }
+                }
+            },
+            // 每过一秒随机切换字体颜色
+            directives: {
+                rainbow: {
+                    inserted: function(el) {
+                        setInterval(function() {
+                            el.style.color = "#" + Math.random().toString(16).slice(2, 8);
+                        }, 1000)
+                    }
+                }
+            },
+            // 页面加载完即计算todoList数组中todo完成的数量和正在完成的数量
+            mounted: function() {
+                for (var i = 0; i < this.todoList.length; i++) {
+                    if (this.todoList[i].isCompleted) {
+                        this.completeNum++;
+                    }
+                }
+                this.doNum = this.todoList.length - this.completeNum;
+            },
+            created: function() {
+                // 初始化数据
+                data = JSON.parse(localStorage.getItem('todoArr'));
+                localStorage.setItem('todoArr', JSON.stringify(data));
+            },
+            // TODO:  事件监听data    name,expectTime,isCompleted 属性的变化
+            computed: {
+                changeData: function() {
+
+                }
+            },
+            watch: {
+                deep: true,
+                changeData: {
+
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

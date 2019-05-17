@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>fullpage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.4/jquery.fullpage.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.4/vendors/jquery.easings.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.4/jquery.fullpage.min.js"></script>
+    <style>
+        ul {
+            list-style: none;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        #fullpage {
+            text-align: center;
+            font-size: 50px;
+            color: rgba(255, 255, 255, 0.705);
+        }
+        
+        #fp-nav ul li a span,
+        .fp-slidesNav ul li a span {
+            background: ccc;
+        }
+        
+        .fp-controlArrow.fp-next {
+            right: 50px;
+        }
+        
+        .fp-controlArrow.fp-pre {
+            left: 50px;
+        }
+        
+        #nav {
+            position: fixed;
+            top: 0;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        #nav ul li {
+            float: left;
+            width: 80px;
+            background: white;
+            border-radius: 20px;
+            padding: 10px;
+            text-align: center;
+            margin-left: 10px;
+        }
+        
+        #nav ul li a {
+            font-size: 20px;
+            color: #555;
+        }
+        /* #nav ul li:hover {
+            background: #aaa;
+        }
+        
+        #nav ul li a:hover {
+            color: white;
+        } */
+        
+        #fullpage .section {
+            /* opacity: .6; */
+            background-size: 100% 100%;
+            color: skyblue;
+        }
+        
+        .first {
+            background: url('./image/11.jpg') no-repeat;
+        }
+        
+        .second {
+            background: url('./image/9.jpg') no-repeat;
+        }
+        
+        .third {
+            background: url('./image/10.jpeg') no-repeat;
+        }
+        
+        .fourth {
+            background: url('./image/6.jpg') no-repeat;
+        }
+        
+        #fp-nav ul li .fp-tooltip {
+            color: aaa;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="nav">
+        <ul>
+            <li>
+                <a href="#firstPage">first</a>
+            </li>
+            <li>
+                <a href="#secondPage">second</a>
+            </li>
+            <li>
+                <a href="#thirdPage">third</a>
+            </li>
+            <li>
+                <a href="#fourthPage">fouth</a>
+            </li>
+        </ul>
+    </div>
+    <div id="fullpage">
+        <div class="section first" data-anchor="firstPage" data-animateIn="animated rubberBand" data-animateOut="animated lightSpeedOut">
+            <h1 data-animateIn="animated rubberBand" data-animateOut="animated lightSpeedOut">demo</h1>
+        </div>
+        <div class="section second " data-anchor="secondPage" data-animateIn="animated bounceInDown" data-animateOut="animated  lightSpeedOut">
+            <h1 data-animateIn="animated swing" data-animateOut="animated  lightSpeedOut">demo</h1>
+            <div class="slide">slide 1</div>
+            <div class="slide">slide 2</div>
+            <div class="slide">slide 3</div>
+            <div class="slide">slide 4</div>
+        </div>
+        <div class="section third" data-anchor="thirdPage" data-animateIn="animated rotateIn " data-animateOut="animated lightSpeedOut">
+            <h1 data-animateIn="animated rollIn " data-animateOut="animated rollOut">demo</h1>
+        </div>
+        <div class="section fourth " data-anchor="fourthPage" data-animateIn="animated zoomIn " data-animateOut="animated lightSpeedOut">
+            <h1 data-animateIn="animated zoomIn " data-animateOut="animated lightSpeedOut">demo</h1>
+        </div>
+    </div>
+
+    <script>
+        // TODO: fullpage.js 和 fullpage.css 3.0.2 之后的版本好像有问题
+        $(function() {
+            $('#fullpage').fullpage({
+                // TODO: 作用有待探讨
+                // menu: 'nav',
+                licenseKey: 'yeah',
+                // 导航锚点  也可以直接用data-anchor 定义锚点
+                // anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
+                // 每一屏的背景颜色
+                sectionsColor: ['skyblue', 'tan', '#d9edf7', '#5cb85c'],
+                resize: true,
+                // 是否有导航栏 默认没有
+                navigation: true,
+                // 导航栏的位置 默认在右侧
+                // navigationPosition: 'right',
+                // 导航悬浮提示
+                navigationTooltips: ['one', 'two', 'three', 'four'],
+                // 分屏滚动速度 默认700 ms
+                // scrollingSpeed: 700
+                // 滚动至第一页后，再向上滚动是否到最后一页  默认 false
+                // loopTop: true,
+                loopBottom: true,
+                // 幻灯片到最后一张是否循环 默认true
+                loopHorizontal: true,
+                // 屏的选择器设置 默认为 .section
+                // sectionSelector: '.section'
+                // 幻灯片的选择器设置 默认为 .slide
+                // slideSelector: '.slide'
+
+                afterLoad: function(anchorLink, index) {
+                    // 获取要给动画效果的元素的data属性  提前给动画元素设置好animate 动画对应的类名
+                    var dataHI = $('h1').eq(index - 1).attr('data-animateIn');
+                    var dataHO = $('h1').eq(index - 1).attr('data-animateOut');
+                    // 清空当前动画元素的 进入退出动画
+                    $('h1').eq(index - 1).removeClass(dataHI + dataHO);
+                    // 加载的时候 添加上进入动画的类
+                    $('h1').eq(index - 1).addClass(dataHI);
+
+                    var dataSI = $('.section').eq(index - 1).attr('data-animateIn');
+                    var dataSO = $('.section').eq(index - 1).attr('data-animateOut');
+                    $('.section').eq(index - 1).removeClass(dataSI + dataSO);
+                    $('.section').eq(index - 1).addClass(dataSI);
+                    $('#nav li').css('background', 'white').children('a').css('color', '#aaa');
+                    $('#nav li').eq(index - 1).css('background', '#aaa').children('a').css('color', 'white');
+                },
+                onLeave: function(index, nextIndex) {
+                    var dataHI = $('h1').eq(index - 1).attr('data-animateIn');
+                    var dataHO = $('h1').eq(index - 1).attr('data-animateOut');
+                    $('h1').eq(index - 1).removeClass(dataHI + dataHO);
+                    $('h1').eq(index - 1).addClass(dataHO);
+
+                    var dataSI = $('.section').eq(index - 1).attr('data-animateIn');
+                    var dataSO = $('.section').eq(index - 1).attr('data-animateOut');
+                    $('.section').eq(index - 1).removeClass(dataSO + dataSI);
+                    $('.section').eq(index - 1).addClass(dataSO);
+                },
+                afterRender: function() {
+                    var dataHI = $('h1').eq(0).attr('data-animateIn');
+                    var dataHO = $('h1').eq(0).attr('data-animateOut');
+                    $('h1').removeClass(dataHI + dataHO);
+                    $('h1').eq(0).addClass(dataHI);
+                    var dataSI = $('.section').eq(0).attr('data-animateIn');
+                    var dataSO = $('.section').eq(0).attr('data-animateOut');
+                    $('.section').removeClass(dataSI + dataSO);
+                    $('.section').eq(0).addClass(dataSI);
+                    $('#nav li').eq(0).css('background', '#aaa').children('a').css('color', 'white');
+                }
+            });
+
+
+        })
+    </script>
+</body>
+
+</html>

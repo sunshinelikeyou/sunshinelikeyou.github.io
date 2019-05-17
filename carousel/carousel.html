@@ -1,0 +1,180 @@
+<!--
+ * @Description: jquery scroll img
+ * @Author: theman
+ * @LastEditors: theman
+ * @Date: 2019-05-06 22:17:32
+ * @LastEditTime: 2019-05-16 20:03:06
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>scroll-img</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .scroll {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            margin: 100px auto;
+            border: 1px solid black;
+        }
+
+        .scroll-img {
+            list-style: none;
+            width: 500px;
+            height: 300px;
+            font-size: 0;
+        }
+
+        .scroll-img a {
+            position: absolute;
+
+        }
+
+        .select-circle {
+            position: absolute;
+            bottom: 20px;
+            left: 160px;
+        }
+
+        /* 小圆点样式 */
+        .select-circle li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            background: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        /* 左右箭头样式 */
+        .arrow {
+            display: none;
+            width: 30px;
+            height: 60px;
+            position: absolute;
+            top: 120px;
+            text-align: center;
+            line-height: 60px;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            background: #aaa;
+            cursor: pointer;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            right: 0;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
+</head>
+
+<body>
+    <div class="scroll">
+        <ul class="scroll-img">
+            <a><img src="./image/11.jpg" alt=""></a>
+            <a><img src="./image/22.jpg" alt=""></a>
+            <a><img src="./image/33.jpg" alt=""></a>
+            <a><img src="./image/44.jpg" alt=""></a>
+            <a><img src="./image/55.jpg" alt=""></a>
+            <a><img src="./image/66.jpg" alt=""></a>
+        </ul>
+        <ul class="select-circle">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+        </ul>
+        <div class="left arrow">&lt;</div>
+        <div class="right arrow">&gt;</div>
+    </div>
+    <script>
+        var t = autoPlay(),
+            flag = true;
+        // 设置第一张图片的样式
+        var index = 0;
+        $(".scroll-img").find("a").eq(0).show().siblings("a").hide();
+        $(".select-circle").find("li").eq(0).css({
+            "background": "#777",
+            "color": "white"
+        });
+        // 鼠标悬浮清除定时器 离开启动定时器
+        $(".scroll-img a").mouseenter(function (e) {
+            clearInterval(t);
+        }).mouseleave(function () {
+            t = autoPlay();
+        });
+        // 点击小圆点，图片相应显示隐藏
+        $(".select-circle li").click(function (e) {
+            clearInterval(t);
+            index = $(this).index();
+            showImg(index)
+        })
+
+        // 点击左右箭头图片分别向左向右显示图片
+        $(".left").click(function(){
+            clearInterval(t);
+           index = index < 1? 5:index - 1;
+        //    console.log(index);
+           showImg(index)
+        })
+        $(".right").click(function(){
+            clearInterval(t);
+           index = index > 4? 0:index + 1;
+        //    console.log(index);
+           showImg(index)
+        })
+        // 鼠标悬浮于scroll 左右箭头显示
+        $(".scroll").mouseenter(function () {
+            $(".arrow").fadeIn(600);
+
+        }).mouseleave(function () {
+            $(".arrow").fadeOut(600);
+        })
+        // 封装定时器方法
+        function autoPlay() {
+            // 图片自动轮播
+            var timer = setInterval(function () {
+                index =  index > 4 ? 0 : index + 1; //TODO:为什么是4不是5
+                showImg(index);
+            }, 3000);
+            return timer;
+        }
+        // 显示图片
+        function showImg(i){
+            $(".scroll-img").find("a").eq(i).fadeIn(1000).siblings("a").fadeOut(1000);
+                // 圆点背景颜色随着图片改变
+                $(".select-circle").find("li").eq(i).css({
+                    "background": "#777",
+                    "color": "white"
+                }).siblings("li").css({
+                    "background": "white",
+                    "color": "black"
+                })    
+        }
+    </script>
+</body>
+
+</html>
