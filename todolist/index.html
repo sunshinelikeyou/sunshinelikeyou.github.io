@@ -43,7 +43,7 @@
                     <li class="list-group-item list-group-item-success">
                         <span class="badge">{{doNum}}</span> 进行中
                     </li>
-                    <li class="list-group-item clearfix text-center" v-for="(todo ,index) in todoList" v-show="!todo.isCompleted">
+                    <li class="list-group-item clearfix text-center" v-for="(todo ,index) in doList" v-show="!todo.isCompleted">
                         <input type="checkbox" class="col-lg-2" :checked="todo.isCompleted" @click="todo.isCompleted = !todo.isCompleted;completeNum ++;doNum --;unpdateChecked(todo ,index)">
                         <input type="text" class="col-lg-4 noBorder" v-model="todo.name" @blur="unpdateName(todo ,index)">
                         <input class="col-lg-3 noBorder" v-model="todo.expectTime" @blur="unpdateTime(todo ,index)" placeholder=" input you expect time">
@@ -55,7 +55,7 @@
                     <li class="list-group-item list-group-item-warning">
                         <span class="badge">{{completeNum}}</span> 已完成
                     </li>
-                    <li class="list-group-item clearfix  text-center " v-for="(todo ,index) in todoList" v-show="todo.isCompleted">
+                    <li class="list-group-item clearfix  text-center " v-for="(todo ,index) in completeList" v-show="todo.isCompleted">
                         <input type="checkbox" class="col-lg-2" :checked="todo.isCompleted" @click="todo.isCompleted = !todo.isCompleted;completeNum --;doNum ++;unpdateChecked(todo ,index)">
                         <input type="text" class="col-lg-4 noBorder" v-model="todo.name" @blur="unpdateName(todo ,index)">
                         <input class="col-lg-3 noBorder" v-model="todo.expectTime" @blur="unpdateTime(todo ,index)" placeholder=" input you expect time">
@@ -69,8 +69,8 @@
     </div>
     <script>
         // TODO:谷歌浏览器中的本地cookie不能使用，localStorage要手动设置 阻止第三方cookie的开关关了才可以使用
-        let data = [];
-        var vm = new Vue({
+        // let data = [];
+        let vm = new Vue({
             el: '#todo-box',
             data: {
                 // 标题
@@ -83,15 +83,13 @@
                 todoName: '',
                 expTime: '',
                 // todo的数组 模拟数据
-                todoList: JSON.parse(localStorage.getItem('todoArr')),
+                todoList: JSON.parse(localStorage.getItem('todoArr')) || [],
             },
             methods: {
                 // 删除当前todo
                 del: function(index, todo) {
-                    data.splice(index, 1);
-                    this.unpdateData();
-                    // this.countNum();
-                    // this.todoList.splice(this.todoList.length - 1);
+                    this.todoList.splice(index, 1);
+                    // doNum相应减一
                     if (todo.isCompleted) {
                         this.completeNum--;
                     } else {
@@ -101,46 +99,40 @@
                 // 创建todo
                 post: function() {
                     // 输入框有内容才能添加todo
-                    console.log(data);
                     if (this.todoName) {
-                        data.push({
+                        this.todoList.push({
                             name: this.todoName,
                             startTime: new Date().toLocaleString(),
                             expectTime: this.expTime,
                             isCompleted: false
                         });
-
-                        this.unpdateData();
                         this.doNum++;
                         this.completeNum = this.todoList.length - this.doNum;
                     }
                     // todo添加完后将输入框内容置空
                     this.todoName = '';
-                    // this.countNum();
-                },
-                unpdateData: function() {
-                    localStorage.setItem('todoArr', JSON.stringify(data));
-                    this.todoList = JSON.parse(localStorage.getItem('todoArr'));
                 },
                 unpdateName: function(todo, index) {
-                    data[index].name = todo.name;
-                    this.unpdateData();
+                    // TODO:必须用set设置todoList的值 才会动态更新
+                    // this.todoList[index].name = todo.name;
+                    Vue.set(vm.todoList[index], vm.todoList[index].name, todo.name)
                 },
                 unpdateTime: function(todo, index) {
-                    data[index].expectTime = todo.expectTime;
-                    this.unpdateData();
+                    // this.todoList[index]. = todo.expectTime;
+                    Vue.set(vm.todoList[index], vm.todoList[index].expectTime, todo.expectTime)
                 },
                 unpdateChecked: function(todo, index) {
-                    data[index].isCompleted = todo.isCompleted;
-                    this.unpdateData();
+                    // this.todoList[index].isCompleted = todo.isCompleted;
+                    // TODO: isCompleted   的值不会动态变化
+                    Vue.set(vm.todoList[index], vm.todoList[index].isCompleted, todo.checked)
                 },
+
                 clear: function() {
                     var msg = confirm('清空列表后将无法恢复，确定清空列表吗？');
                     if (msg) {
-                        data = [];
+                        this.todoList = [];
                         this.doNum = 0;
                         this.completeNum = 0;
-                        this.unpdateData();
                     }
                 }
             },
@@ -156,28 +148,32 @@
             },
             // 页面加载完即计算todoList数组中todo完成的数量和正在完成的数量
             mounted: function() {
+                // localStorage.setItem('todoArr', localStorage.getItem('todoArr') || []);
                 for (var i = 0; i < this.todoList.length; i++) {
                     if (this.todoList[i].isCompleted) {
                         this.completeNum++;
                     }
                 }
                 this.doNum = this.todoList.length - this.completeNum;
+                // console.log(this.todoList);
             },
-            created: function() {
-                // 初始化数据
-                data = JSON.parse(localStorage.getItem('todoArr'));
-                localStorage.setItem('todoArr', JSON.stringify(data));
-            },
-            // TODO:  事件监听data    name,expectTime,isCompleted 属性的变化
             computed: {
-                changeData: function() {
-
-                }
+                doList: function() {
+                    return this.todoList.filter(function(cval) {
+                        return !cval.isCompleted;
+                    })
+                },
+                completeList: function() {
+                    return this.todoList.filter(function(cval) {
+                        return cval.isCompleted;
+                    })
+                },
             },
             watch: {
-                deep: true,
-                changeData: {
-
+                // 监听todoList的变化 然后把新的值设置给todoArr
+                todoList: function(newList) {
+                    localStorage.setItem('todoArr', JSON.stringify(newList));
+                    console.log(newList);
                 }
             }
         });
