@@ -5,3 +5,4 @@ Some small  cases or some of learning notes
 - vue + bootstrap  做的简单的ToDoList 用了localStorage 存储  [链接](https://sunshinelikeyou.github.io/todolist/)
 - 原生js写的扫雷  仿照别人的写的 [链接](https://sunshinelikeyou.github.io/lei/)
 - 扇形导航 [链接](https://sunshinelikeyou.github.io/nav/)
+- 立方体 css3 + animate动画 [链接](https://sunshinelikeyou.github.io/cube/)
